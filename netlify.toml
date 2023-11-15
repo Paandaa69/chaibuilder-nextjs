@@ -1,0 +1,3 @@
+[template.environment]
+    CHAIBUILDER_APP_KEY = ""
+    CHAIBUILDER_AUTH_SECRET = ""

@@ -1,0 +1,5 @@
+@config "../../tailwind.chaibuilder.config.ts";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
