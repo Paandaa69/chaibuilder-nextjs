@@ -1,10 +1,13 @@
-import { getStylesForPageData, RenderChaiPage } from "@chaibuilder/sdk/render";
-import { get, join } from "lodash";
+import { getStylesForPageData } from "@chaibuilder/sdk/lib";
+import { get } from "lodash";
 import { StylesAndFonts } from "./StylesAndFonts";
 import { notFound } from "next/navigation";
 import { chaiBuilder } from "@/app/chaiBuilder";
+import "@/data-providers/default";
 import "@/chai-blocks";
 import "@/app/globals.css";
+import { prepareExternalData } from "@chaibuilder/sdk/server";
+import { RenderChaiPage } from "@chaibuilder/sdk/render";
 
 interface ChaiParams {
   params: { slug: string[] };
@@ -43,13 +46,17 @@ export async function generateMetadata({ params }: ChaiParams) {
   };
 }
 
-export default async function Home({ params }: { params: { slug: string[] } }) {
-  const { data } = await chaiBuilder.getPageData(pageSlug(params));
+export default async function Home({ params: { slug } }: ChaiParams) {
+  const { data } = await chaiBuilder.getPageData(`${slug?.join("/") || ""}`);
   if (!data) return notFound();
 
+  // @ts-ignore
+  const { data: externalData } = await prepareExternalData(data.page.providers);
   const styles = await getStylesForPageData(data);
+
   return (
     <RenderChaiPage
+      externalData={externalData}
       pageData={data}
       before={<StylesAndFonts project={data.project} styles={styles} />}
     />

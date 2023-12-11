@@ -2,6 +2,7 @@
 import "./chaibuilder.css";
 import "@chaibuilder/sdk/styles";
 import "@/chai-blocks";
+import "@/data-providers/default";
 import dynamic from "next/dynamic";
 import React from "react";
 import Link from "next/link";
