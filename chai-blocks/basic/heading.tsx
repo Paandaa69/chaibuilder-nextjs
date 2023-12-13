@@ -42,6 +42,7 @@ registerChaiBlock(HeadingBlock as React.FC<any>, {
     level: SelectOption({
       title: "Level",
       default: "h1",
+      binding: false,
       options: [
         { value: "h1", title: "h1" },
         { value: "h2", title: "h2" },

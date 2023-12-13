@@ -1,9 +1,9 @@
 import { getStylesForPageData } from "@chaibuilder/sdk/lib";
-import { get } from "lodash";
+import { get, join } from "lodash";
 import { StylesAndFonts } from "./StylesAndFonts";
 import { notFound } from "next/navigation";
 import { chaiBuilder } from "@/app/chaiBuilder";
-import "@/data-providers/default";
+import "@/data-providers";
 import "@/chai-blocks";
 import "@/app/globals.css";
 import { prepareExternalData } from "@chaibuilder/sdk/server";
@@ -21,7 +21,7 @@ export const generateViewport = async ({ params }: ChaiParams) => {
     themeColor: get(
       pageData,
       "project.brandingOptions.primaryColor",
-      "#000000"
+      "#000000",
     ) as string,
   };
 };
@@ -46,12 +46,14 @@ export async function generateMetadata({ params }: ChaiParams) {
   };
 }
 
-export default async function Home({ params: { slug } }: ChaiParams) {
-  const { data } = await chaiBuilder.getPageData(`${slug?.join("/") || ""}`);
+export default async function Home({ params }: ChaiParams) {
+  const { data } = await chaiBuilder.getPageData(pageSlug(params));
   if (!data) return notFound();
 
-  // @ts-ignore
-  const { data: externalData } = await prepareExternalData(data.page.providers);
+  const { data: externalData } = await prepareExternalData(
+    data.page.providers,
+    pageSlug(params),
+  );
   const styles = await getStylesForPageData(data);
 
   return (
